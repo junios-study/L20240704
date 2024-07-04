@@ -58,22 +58,22 @@ void ATP_ThirdPersonCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	//Programming
-	float Speed = GetCharacterMovement()->Velocity.Size();
+	////Programming
+	//float Speed = GetCharacterMovement()->Velocity.Size();
 
-	//Art
-	if (Speed > 300)
-	{
-		//Run
-		GetMesh()->PlayAnimation(JogAnimation, true);
-		GetMesh()->Play(true);
-	}
-	else
-	{
-		//Idle
-		GetMesh()->PlayAnimation(IdleAnimation, true);
-		GetMesh()->Play(true);
-	}
+	////Art
+	//if (Speed > 300)
+	//{
+	//	//Run
+	//	GetMesh()->PlayAnimation(JogAnimation, true);
+	//	GetMesh()->Play(true);
+	//}
+	//else
+	//{
+	//	//Idle
+	//	GetMesh()->PlayAnimation(IdleAnimation, true);
+	//	GetMesh()->Play(true);
+	//}
 }
 
 void ATP_ThirdPersonCharacter::BeginPlay()
