@@ -54,6 +54,28 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
 
+void ATP_ThirdPersonCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	//Programming
+	float Speed = GetCharacterMovement()->Velocity.Size();
+
+	//Art
+	if (Speed > 300)
+	{
+		//Run
+		GetMesh()->PlayAnimation(JogAnimation, true);
+		GetMesh()->Play(true);
+	}
+	else
+	{
+		//Idle
+		GetMesh()->PlayAnimation(IdleAnimation, true);
+		GetMesh()->Play(true);
+	}
+}
+
 void ATP_ThirdPersonCharacter::BeginPlay()
 {
 	// Call the base class  
