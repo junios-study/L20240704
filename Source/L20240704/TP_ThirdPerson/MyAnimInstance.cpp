@@ -23,7 +23,7 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	}
 }
 
-void UMyAnimInstance::AnimNotify_Reload(UAnimNotify* AnimNotify)
+void UMyAnimInstance::AnimNotify_ReloadEnd()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Relaod Completed."));
 

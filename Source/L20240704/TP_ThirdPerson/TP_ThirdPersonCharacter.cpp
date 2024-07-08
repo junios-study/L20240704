@@ -123,6 +123,10 @@ void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(UInputComponent* Player
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &ATP_ThirdPersonCharacter::Sprint);
 
 		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &ATP_ThirdPersonCharacter::DoCrouch);
+
+		EnhancedInputComponent->BindAction(ZoomAction, ETriggerEvent::Triggered, this, &ATP_ThirdPersonCharacter::Zoom);
+
+		EnhancedInputComponent->BindAction(ZoomAction, ETriggerEvent::Completed, this, &ATP_ThirdPersonCharacter::Zoom);
 	}
 
 	else
@@ -192,5 +196,19 @@ void ATP_ThirdPersonCharacter::DoCrouch(const FInputActionValue& Value)
 	else
 	{
 		UnCrouch();
+	}
+}
+
+void ATP_ThirdPersonCharacter::Zoom(const FInputActionValue& Value)
+{
+	bool Condition = Value.Get<bool>();
+
+	if (!Condition)
+	{
+		bIsZoom = false;
+	}
+	else
+	{
+		bIsZoom = true;
 	}
 }

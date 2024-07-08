@@ -52,11 +52,15 @@ class ATP_ThirdPersonCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> SprintAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> ZoomAction;
+
 public:
 	ATP_ThirdPersonCharacter();
 
 	virtual void Tick(float DeltaSeconds) override;
 	
+
 
 protected:
 
@@ -69,6 +73,8 @@ protected:
 	void Sprint(const FInputActionValue& Value);
 
 	void DoCrouch(const FInputActionValue& Value);
+
+	void Zoom(const FInputActionValue& Value);
 			
 
 protected:
@@ -92,5 +98,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	uint8 bIsSprint : 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
+	uint8 bIsZoom : 1;
 };
 
