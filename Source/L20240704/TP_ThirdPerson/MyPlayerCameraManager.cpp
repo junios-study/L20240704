@@ -4,6 +4,7 @@
 #include "MyPlayerCameraManager.h"
 #include "TP_ThirdPersonCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Components/CapsuleComponent.h"
 
 void AMyPlayerCameraManager::UpdateCamera(float DeltaTime)
 {
