@@ -20,6 +20,9 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		
 		Direction = CalculateDirection(Pawn->GetCharacterMovement()->Velocity,
 			Pawn->GetActorRotation());
+
+		AimYaw = Pawn->GetBaseAimRotation().Yaw;
+		AimPitch = Pawn->GetBaseAimRotation().Pitch;
 	}
 }
 

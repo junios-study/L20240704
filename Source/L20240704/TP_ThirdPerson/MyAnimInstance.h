@@ -31,6 +31,13 @@ public:
 	uint8 bIsCrouched : 1;
 
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Status")
+	float AimYaw;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Status")
+	float AimPitch;
+
+
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 	UFUNCTION()
