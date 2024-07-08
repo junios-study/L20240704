@@ -16,6 +16,7 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		//UE_LOG(LogTemp, Warning, TEXT("%f"), Speed);
 		bIsMoveingOnGround = Pawn->GetCharacterMovement()->IsMovingOnGround();
 		bIsDead = false;
+		bIsCrouched = Pawn->bIsCrouched;
 		
 		Direction = CalculateDirection(Pawn->GetCharacterMovement()->Velocity,
 			Pawn->GetActorRotation());

@@ -39,6 +39,8 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
+	GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
+
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -52,6 +54,13 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+
+	//눈높이 조절
+	BaseEyeHeight = GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+	CrouchedEyeHeight = GetCapsuleComponent()->GetScaledCapsuleHalfHeight() * (2.0f/3.0f);
+
+	//충돌박스 크기 조절
+	GetCharacterMovement()->CrouchedHalfHeight = CrouchedEyeHeight;
 }
 
 void ATP_ThirdPersonCharacter::Tick(float DeltaSeconds)
@@ -108,7 +117,14 @@ void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(UInputComponent* Player
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ATP_ThirdPersonCharacter::Look);
+
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &ATP_ThirdPersonCharacter::Sprint);
+
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &ATP_ThirdPersonCharacter::Sprint);
+
+		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &ATP_ThirdPersonCharacter::DoCrouch);
 	}
+
 	else
 	{
 		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
@@ -148,5 +164,33 @@ void ATP_ThirdPersonCharacter::Look(const FInputActionValue& Value)
 		// add yaw and pitch input to controller
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
+	}
+}
+
+void ATP_ThirdPersonCharacter::Sprint(const FInputActionValue& Value)
+{
+	bool Condition = Value.Get<bool>();
+
+	if (Condition)
+	{
+		bIsSprint = true;
+		GetCharacterMovement()->MaxWalkSpeed = 900;
+	}
+	else
+	{
+		bIsSprint = false;
+		GetCharacterMovement()->MaxWalkSpeed = 600;
+	}
+}
+
+void ATP_ThirdPersonCharacter::DoCrouch(const FInputActionValue& Value)
+{
+	if (CanCrouch() && !bIsSprint)
+	{
+		Crouch();
+	}
+	else
+	{
+		UnCrouch();
 	}
 }

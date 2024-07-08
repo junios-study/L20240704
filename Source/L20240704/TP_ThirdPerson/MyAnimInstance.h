@@ -27,6 +27,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Status")
 	float Direction;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Status")
+	uint8 bIsCrouched : 1;
+
 
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
