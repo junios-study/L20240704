@@ -57,10 +57,14 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 
 	//눈높이 조절
 	BaseEyeHeight = GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
-	CrouchedEyeHeight = GetCapsuleComponent()->GetScaledCapsuleHalfHeight() * (2.0f/3.0f);
+	CrouchedEyeHeight = BaseEyeHeight;
+	//CrouchedEyeHeight = GetCapsuleComponent()->GetScaledCapsuleHalfHeight() * (2.0f/3.0f);
 
 	//충돌박스 크기 조절
 	GetCharacterMovement()->CrouchedHalfHeight = CrouchedEyeHeight;
+
+	NoramlSpringArmLocation = GetCameraBoom()->GetRelativeLocation();
+	CrouchedSpringArmLocation = NoramlSpringArmLocation + FVector(0, 0, -40.0f);
 }
 
 void ATP_ThirdPersonCharacter::Tick(float DeltaSeconds)

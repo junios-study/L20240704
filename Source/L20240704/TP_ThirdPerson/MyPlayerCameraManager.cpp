@@ -3,6 +3,7 @@
 
 #include "MyPlayerCameraManager.h"
 #include "TP_ThirdPersonCharacter.h"
+#include "GameFramework/SpringArmComponent.h"
 
 void AMyPlayerCameraManager::UpdateCamera(float DeltaTime)
 {
@@ -18,6 +19,17 @@ void AMyPlayerCameraManager::UpdateCamera(float DeltaTime)
 		SetFOV(ResultFOV);
 
 		//Camera 높이 조절
+		//CameraBoom
 
+		FVector TargetLocation = Pawn->bIsCrouched ? Pawn->CrouchedSpringArmLocation : Pawn->NoramlSpringArmLocation;
+
+		FVector ResultLocation = FMath::VInterpTo(
+			Pawn->GetCameraBoom()->GetRelativeLocation(),
+			TargetLocation,
+			DeltaTime,
+			15.0f
+		);
+
+		Pawn->GetCameraBoom()->SetRelativeLocation(ResultLocation);
 	}
 }

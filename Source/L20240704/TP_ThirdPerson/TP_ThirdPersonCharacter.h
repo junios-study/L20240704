@@ -101,5 +101,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	uint8 bIsZoom : 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
+	FVector NoramlSpringArmLocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
+	FVector CrouchedSpringArmLocation;
 };
 
