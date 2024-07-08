@@ -22,3 +22,9 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 			Pawn->GetActorRotation());
 	}
 }
+
+void UMyAnimInstance::AnimNotify_Reload(UAnimNotify* AnimNotify)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Relaod Completed."));
+
+}
