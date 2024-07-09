@@ -55,6 +55,10 @@ class ATP_ThirdPersonCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> ZoomAction;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> FireAction;
+
 public:
 	ATP_ThirdPersonCharacter();
 
@@ -75,6 +79,8 @@ protected:
 	void DoCrouch(const FInputActionValue& Value);
 
 	void Zoom(const FInputActionValue& Value);
+
+	void Fire(const FInputActionValue& Value);
 			
 
 protected:
@@ -103,9 +109,21 @@ public:
 	uint8 bIsZoom : 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
+	uint8 bIsFire : 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	FVector NoramlSpringArmLocation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	FVector CrouchedSpringArmLocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	TObjectPtr<UAnimMontage> DeathMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	TObjectPtr<UAnimMontage> FireMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	TObjectPtr<UAnimMontage> ReloadMontage;
 };
 

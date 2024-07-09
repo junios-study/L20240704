@@ -131,6 +131,10 @@ void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(UInputComponent* Player
 		EnhancedInputComponent->BindAction(ZoomAction, ETriggerEvent::Triggered, this, &ATP_ThirdPersonCharacter::Zoom);
 
 		EnhancedInputComponent->BindAction(ZoomAction, ETriggerEvent::Completed, this, &ATP_ThirdPersonCharacter::Zoom);
+
+		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &ATP_ThirdPersonCharacter::Fire);
+
+		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Completed, this, &ATP_ThirdPersonCharacter::Fire);
 	}
 
 	else
@@ -214,5 +218,25 @@ void ATP_ThirdPersonCharacter::Zoom(const FInputActionValue& Value)
 	else
 	{
 		bIsZoom = true;
+	}
+}
+
+void ATP_ThirdPersonCharacter::Fire(const FInputActionValue& Value)
+{
+	bool Condition = Value.Get<bool>();
+
+	int32 RandomNumber = FMath::RandRange(1, 3);
+	FString SectionName = FString::Printf(TEXT("Death_%d"), RandomNumber);
+
+	//PlayAnimMontage(DeathMontage, 1.0f, FName(*SectionName));
+	PlayAnimMontage(FireMontage, 1.0f);
+
+	if (!Condition)
+	{
+		bIsFire = false;
+	}
+	else
+	{
+		bIsFire = true;
 	}
 }
