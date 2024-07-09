@@ -20,7 +20,7 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-		
+
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -95,6 +95,20 @@ void ATP_ThirdPersonCharacter::BeginPlay()
 	Super::BeginPlay();
 }
 
+void ATP_ThirdPersonCharacter::PlayDead()
+{
+	int32 RandomNumber = FMath::RandRange(1, 3);
+	FString SectionName = FString::Printf(TEXT("Death_%d"), RandomNumber);
+	PlayAnimMontage(DeathMontage, 1.0f, FName(*SectionName));
+}
+
+void ATP_ThirdPersonCharacter::PlayHitReaction()
+{
+	int32 RandomNumber = FMath::RandRange(1, 4);
+	FString SectionName = FString::Printf(TEXT("Hit_%d"), RandomNumber);
+	PlayAnimMontage(HitMontage, 1.0f, FName(*SectionName));
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -108,10 +122,10 @@ void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(UInputComponent* Player
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
-	
+
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
-		
+
 		// Jumping
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
@@ -156,7 +170,7 @@ void ATP_ThirdPersonCharacter::Move(const FInputActionValue& Value)
 
 		// get forward vector
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	
+
 		// get right vector 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
@@ -225,18 +239,33 @@ void ATP_ThirdPersonCharacter::Fire(const FInputActionValue& Value)
 {
 	bool Condition = Value.Get<bool>();
 
-	int32 RandomNumber = FMath::RandRange(1, 3);
-	FString SectionName = FString::Printf(TEXT("Death_%d"), RandomNumber);
-
-	//PlayAnimMontage(DeathMontage, 1.0f, FName(*SectionName));
-	PlayAnimMontage(FireMontage, 1.0f);
-
-	if (!Condition)
+	if (Condition)
 	{
-		bIsFire = false;
+		bIsFire = true;
+		//if (!GetMesh()->GetAnimInstance()->Montage_IsPlaying(FireMontage))
+		//{
+		//	PlayAnimMontage(FireMontage, 1.0f, TEXT("Ironsight"));
+		//}
+
 	}
 	else
 	{
-		bIsFire = true;
+		bIsFire = false;
+	}
+}
+
+void ATP_ThirdPersonCharacter::Reload(const FInputActionValue& Value)
+{
+	//int32 RandomNumber = FMath::RandRange(1, 3);
+	//FString SectionName = FString::Printf(TEXT("Death_%d"), RandomNumber);
+
+	if (bIsFire)
+	{
+		return;
+	}
+
+	if (!GetMesh()->GetAnimInstance()->Montage_IsPlaying(ReloadMontage))
+	{
+		PlayAnimMontage(ReloadMontage);
 	}
 }

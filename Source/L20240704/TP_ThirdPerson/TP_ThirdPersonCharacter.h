@@ -59,6 +59,9 @@ class ATP_ThirdPersonCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> FireAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> ReloadAction;
+
 public:
 	ATP_ThirdPersonCharacter();
 
@@ -81,6 +84,8 @@ protected:
 	void Zoom(const FInputActionValue& Value);
 
 	void Fire(const FInputActionValue& Value);
+
+	void Reload(const FInputActionValue& Value);
 			
 
 protected:
@@ -125,5 +130,16 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
 	TObjectPtr<UAnimMontage> ReloadMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation")
+	TObjectPtr<UAnimMontage> HitMontage;
+	
+
+	UFUNCTION(BlueprintCallable)
+	void PlayDead();
+
+	UFUNCTION(BlueprintCallable)
+
+	void PlayHitReaction();
 };
 

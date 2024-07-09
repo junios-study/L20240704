@@ -2,14 +2,14 @@
 
 
 #include "MyAnimInstance.h"
-#include "GameFramework/Character.h"
+#include "TP_ThirdPersonCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	ACharacter* Pawn = Cast<ACharacter>(TryGetPawnOwner());
+	ATP_ThirdPersonCharacter* Pawn = Cast<ATP_ThirdPersonCharacter>(TryGetPawnOwner());
 	if (IsValid(Pawn))
 	{
 		Speed = Pawn->GetCharacterMovement()->Velocity.Size2D();
@@ -23,6 +23,8 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 		AimYaw = Pawn->GetBaseAimRotation().Yaw;
 		AimPitch = Pawn->GetBaseAimRotation().Pitch;
+
+		bIsFire = Pawn->bIsFire;
 	}
 }
 

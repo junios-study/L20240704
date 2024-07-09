@@ -30,6 +30,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Status")
 	uint8 bIsCrouched : 1;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Status")
+	uint8 bIsFire : 1;
+
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Status")
 	float AimYaw;
