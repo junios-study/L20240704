@@ -141,5 +141,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 
 	void PlayHitReaction();
+
+	float CurrentHP = 100.0f;
+
+
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser);
 };
 

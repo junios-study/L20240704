@@ -10,6 +10,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -61,7 +63,7 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 	//CrouchedEyeHeight = GetCapsuleComponent()->GetScaledCapsuleHalfHeight() * (2.0f/3.0f);
 
 	//충돌박스 크기 조절
-	GetCharacterMovement()->CrouchedHalfHeight = CrouchedEyeHeight;
+	GetCharacterMovement()->SetCrouchedHalfHeight(CrouchedEyeHeight);
 
 	NoramlSpringArmLocation = GetCameraBoom()->GetRelativeLocation();
 	CrouchedSpringArmLocation = NoramlSpringArmLocation + FVector(0, 0, -40.0f);
@@ -107,6 +109,35 @@ void ATP_ThirdPersonCharacter::PlayHitReaction()
 	int32 RandomNumber = FMath::RandRange(1, 4);
 	FString SectionName = FString::Printf(TEXT("Hit_%d"), RandomNumber);
 	PlayAnimMontage(HitMontage, 1.0f, FName(*SectionName));
+}
+
+float ATP_ThirdPersonCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	if (CurrentHP > 0)
+	{
+		PlayHitReaction();
+		CurrentHP -= DamageAmount;
+	}
+	else
+	{
+		PlayDead();
+		APlayerController* PC = Cast<APlayerController>(GetController());
+		if (PC)
+		{
+			PC->DisableInput(PC);
+			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		}
+		
+	}
+
+	
+
+
+
+	return 0.0f;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -241,6 +272,60 @@ void ATP_ThirdPersonCharacter::Fire(const FInputActionValue& Value)
 
 	if (Condition)
 	{
+		APlayerController* PC = Cast<APlayerController>(GetController());
+		if (PC)
+		{
+			int32 CenterX;
+			int32 CenterY;
+
+			PC->GetViewportSize(CenterX, CenterY);
+
+			CenterX /= 2;
+			CenterY /= 2;
+
+			FVector WorldLocation;
+			FVector WorldDirection;
+			PC->DeprojectScreenPositionToWorld(
+				CenterX,
+				CenterY,
+				WorldLocation,
+				WorldDirection
+				);
+
+			TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjects;
+
+			TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic));
+			TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic));
+			TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_PhysicsBody));
+
+			TArray<AActor*> IgnoreActors;
+			FHitResult OutHit;
+
+			bool bResult = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(),
+				WorldLocation,
+				WorldLocation + (WorldDirection * 100 * 100),
+				TraceObjects,
+				true,
+				IgnoreActors,
+				EDrawDebugTrace::ForDuration,
+				OutHit,
+				true
+			);
+			if (bResult)
+			{
+				UGameplayStatics::ApplyDamage(
+					OutHit.GetActor(),
+					10.0f,
+					GetController(),
+					this,
+					UDamageType::StaticClass()
+				);
+			}
+
+		}
+
+
+
 		bIsFire = true;
 		//if (!GetMesh()->GetAnimInstance()->Montage_IsPlaying(FireMontage))
 		//{
